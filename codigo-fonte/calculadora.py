@@ -3,21 +3,37 @@ from math import *
 import re
 
 
-class Calculadora:
-    def __init__(self, canvas):
+class Calculadora(Tk):
+    def __init__(self, titulo, calculadora_largura, calculadora_altura, botao_altura, botao_largura, icon_path):
+        super().__init__()
+        # config janela
+        self.title(titulo)
+        geometry = f"{calculadora_largura}x{calculadora_altura}"
+        self.geometry(geometry)
+        self.resizable(width=False, height=False)
+        icon = PhotoImage(file=f"{icon_path}")
+        self.iconphoto(True, icon)
+        # Canvas
+        self._canvas = Canvas(self)
+        self._canvas.pack()
+        # variables
         self._numeros = ''# Numbers label
-        altura = 2# Buttons heigth
-        largura = 5# Buttons width
-        self._canvas = canvas
+        botao_altura = botao_altura# Buttons heigth
+        botao_largura = botao_largura# Buttons width
         # display
         self._display = Label(self._canvas, text="Num", height=3, width=25, bg="white")
         # Frame
         self._frame = Frame(self._canvas)
-        self._create_button(altura, largura)
+        self._create_button_numbers(botao_altura, botao_largura)
+        self._create_button_specials(botao_altura, botao_largura)
         # build interface
         self._place_buttons()
+        # keyboard events numbers
+        self._keyboard_numbers()
+        # keyboard events special
+        self._keyboard_special()
 
-    def _create_button(self, altura, largura):
+    def _create_button_numbers(self, altura, largura):
         # 0 - 9
         self._button_0 = Button(self._frame, text="0", height=altura, width=largura,
                                 command=lambda: self.button_num('0'))
@@ -40,6 +56,7 @@ class Calculadora:
         self._button_9 = Button(self._frame, text="9", height=altura, width=largura,
                                 command=lambda: self.button_num('9'))
 
+    def _create_button_specials(self, altura, largura):
         # special buttons
         self._button_negate = Button(self._frame, text="+/-", height=altura, width=largura, command=self.button_negate)
         self._button_dot = Button(self._frame, text=",", height=altura, width=largura,
@@ -97,6 +114,28 @@ class Calculadora:
         self._button_dot.grid(row=6, column=2)
         self._button_confirm.grid(row=6, column=3)
 
+    def _keyboard_numbers(self):
+        self.bind('0', lambda event: self.button_num('0'))
+        self.bind('1', lambda event: self.button_num('1'))
+        self.bind('2', lambda event: self.button_num('2'))
+        self.bind('3', lambda event: self.button_num('3'))
+        self.bind('4', lambda event: self.button_num('4'))
+        self.bind('5', lambda event: self.button_num('5'))
+        self.bind('6', lambda event: self.button_num('6'))
+        self.bind('7', lambda event: self.button_num('7'))
+        self.bind('8', lambda event: self.button_num('8'))
+        self.bind('9', lambda event: self.button_num('9'))
+
+    def _keyboard_special(self):
+        self.bind('+', lambda event: self.button_special('+'))
+        self.bind('-', lambda event: self.button_special('-'))
+        self.bind('/', lambda event: self.button_special('/'))
+        self.bind('*', lambda event: self.button_special('*'))
+        self.bind(',', lambda event: self.button_special('.'))
+        self.bind('.', lambda event: self.button_special('.'))
+        self.bind('<Return>', lambda event: self.button_confirm())
+        self.bind('<BackSpace>', lambda event: self.button_remove())
+
     def button_num(self, num):
         if not self._comeca_com_zero(num):
             self._numeros = self._numeros + str(num)
@@ -141,9 +180,9 @@ class Calculadora:
     def button_square_root(self):
         if self._display_com_numero():
             try:
-                numero = int(self._numeros)
+                numero = float(self._numeros)
                 numero_square_root = sqrt(numero)
-                self._numeros = numero_square_root
+                self._numeros = str(numero_square_root)
                 self._display.config(text=self._numeros)
             except:
                 self._display.config(text="Não foi possível efetuar o cálculo")
@@ -151,9 +190,9 @@ class Calculadora:
     def button_square(self):
         if self._display_com_numero():
             try:
-                numero = int(self._numeros)
+                numero = float(self._numeros)
                 numero_square = pow(numero, 2)
-                self._numeros = numero_square
+                self._numeros = str(numero_square)
                 self._display.config(text=self._numeros)
             except:
                 self._display.config(text="Não foi possível efetuar o cálculo")
@@ -162,9 +201,9 @@ class Calculadora:
         self.button_confirm()
         if self._display_com_numero():
             try:
-                numero = int(self._numeros)
+                numero = float(self._numeros)
                 numero_invert = 1 / numero
-                self._numeros = numero_invert
+                self._numeros = str(numero_invert)
                 self._display.config(text=self._numeros)
             except:
                 self._display.config(text="Não foi possível efetuar o cálculo")
@@ -198,10 +237,11 @@ class Calculadora:
                 self._display.config(text="Não foi possível efetuar o cálculo")
 
     def _display_com_numero(self):
-        return len(self._numeros)
+        return len(str(self._numeros))
 
     def _comeca_com_zero(self, num):
         comeca_com_zero = False
-        if not self._display_com_numero() and num == '0':
+        if (not self._display_com_numero() or not self._tem_numero_antes()) and num == '0':
             comeca_com_zero = True
         return comeca_com_zero
+

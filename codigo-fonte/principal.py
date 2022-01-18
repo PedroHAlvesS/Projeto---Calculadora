@@ -1,18 +1,11 @@
-from tkinter import *
 from calculadora import Calculadora
 
+calc_title = "Calc"
+calc_largura = 200
+calc_altura = 300
+botao_altura = 2
+botao_largura = 5
+icon_path = "imagem/calculadora_icone.png"
 
-def calculadora_basica(largura_calculadora, altura_calculadora):
-    largura = largura_calculadora
-    altura = altura_calculadora
-    canvas = Canvas(janela_principal, width=largura, height=altura)
-    canvas.pack()
-    calculadora_basica = Calculadora(canvas)
-
-
-janela_principal = Tk()
-janela_principal.title("Calc")
-icon = PhotoImage(file="imagem/calculadora_icone.png")
-janela_principal.iconphoto(True, icon)
-calculadora_basica(500, 500)
-janela_principal.mainloop()
+calc = Calculadora(calc_title, calc_largura, calc_altura, botao_altura, botao_largura, icon_path)
+calc.mainloop()
