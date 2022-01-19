@@ -1,4 +1,4 @@
-from calculadora import Calculadora
+from src.calc.calculadora import Calculadora
 
 calc_title = "Calc"
 calc_largura = 200
