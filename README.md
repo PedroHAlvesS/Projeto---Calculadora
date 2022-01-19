@@ -3,8 +3,8 @@
  
  Para uso do programa, basta baixar a pasta 'programa' que contém, calculadora.exe + pasta imagem
  
- Conhecimentos usados: RegEx, GUI, POO.
+ Conhecimentos usados: RegEx, GUI, POO, TDD-Pytest.
  
 - [x] Fazer a Calculadora
 - [x] Adicionar inputs através do teclado, sem necessidade de clicar nos botões
-- [ ] Adicionar os testes automátizados
+- [x] Adicionar os testes automátizados
